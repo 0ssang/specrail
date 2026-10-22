@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "specrail",
+  "description": "스펙 기반 AI 개발(AI-DLC) 워크플로와 세션 메모리",
+  "owner": {
+    "name": "0ssang",
+    "url": "https://github.com/0ssang"
+  },
+  "plugins": [
+    {
+      "name": "specrail",
+      "description": "요구사항 → 설계 → 작업 → 구현, 단계마다 사람 승인. /clear·압축 뒤에도 맥락 유지.",
+      "source": "./plugin",
+      "category": "productivity"
+    }
+  ]
+}
