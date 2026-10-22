@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.png" alt="specrail logo" width="640">
+</p>
+
 # specrail
 
 A Claude Code plugin that keeps the AI **on the rails of a spec**.
@@ -83,6 +87,7 @@ specs/<feature>/       requirements.md, design.md, tasks.md
 
 ```text
 .claude-plugin/marketplace.json   this repository is the marketplace
+assets/                           README images (not part of the installed plugin)
 plugin/
   .claude-plugin/plugin.json
   hooks/hooks.json                hook registration
