@@ -37,6 +37,7 @@ When developing locally, use the path to this folder instead of `0ssang/specrail
   → review, then "continue" (or /spec-impl user-login 전부 to run all tasks)
 ```
 
+- You don't have to type the first command: asking for a new feature in plain words ("I want to build a todo app") starts `/spec-requirements`. Small jobs like bug fixes go straight to code, and saying "without a spec" (스펙 없이) skips the workflow.
 - Every spec document starts with a status line, `> 상태: 초안` (draft). When you approve, Claude changes it to `> 상태: 승인됨 (date)` (approved). A phase skill stops if the previous document is not approved.
 - Editing an approved document resets it to draft, and it needs approval again.
 - If implementation shows the design is wrong, Claude stops and proposes a change to design.md instead of drifting from the spec.
@@ -55,7 +56,7 @@ Session memory is **opt-in per project**: hooks only read and write when the pro
 
 | When | What happens |
 |---|---|
-| Session start · `/clear` · resume · after compaction | Injects spec status (if `specs/` exists), memory rules, handoff note, recent progress, git summary |
+| Session start · `/clear` · resume · after compaction | Injects spec workflow rules (always), spec status (if `specs/` exists), memory rules, handoff note, recent progress, git summary |
 | Before compaction | Snapshots changed files, recent requests, last reply, git status (re-injected after compaction) |
 | Every prompt | Suggests saving when token usage passes the threshold |
 | File edits | Records changed files per session |
@@ -92,6 +93,6 @@ plugin/
   .claude-plugin/plugin.json
   hooks/hooks.json                hook registration
   hooks/*.sh                      hook scripts and the mem.sh query tool
-  rules/session-memory.md         memory rules printed by the SessionStart hook
+  rules/                          spec workflow and memory rules printed by the SessionStart hook
   skills/                         spec-* (4), session-save, session-resume
 ```

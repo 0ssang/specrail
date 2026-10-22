@@ -1,6 +1,6 @@
 ---
 name: spec-requirements
-description: 새 기능의 요구사항 문서(specs/<기능>/requirements.md)를 사용자 스토리와 EARS 형식 인수 조건으로 작성하고 사용자 승인을 받는다. 스펙 기반 개발의 1단계. 새 기능이나 큰 변경을 시작할 때 사용한다.
+description: 새 기능·새 앱·큰 변경을 시작할 때 코드를 쓰기 전에 먼저 사용한다. 사용자가 "~ 만들고 싶어", "~ 만들어줘", "~ 기능 추가해줘"라고 하면 이 스킬로 요구사항 문서(specs/<기능>/requirements.md)를 사용자 스토리와 EARS 인수 조건으로 작성하고 승인을 받는다. 스펙 기반 개발의 1단계. 버그 수정 같은 작은 변경에는 쓰지 않는다.
 argument-hint: "<만들 기능 설명>"
 allowed-tools: Bash(bash "${CLAUDE_PLUGIN_ROOT}/hooks/mem.sh":*)
 ---
