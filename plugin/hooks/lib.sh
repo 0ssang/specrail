@@ -43,7 +43,10 @@ git_summary() {
 
 recent_progress() { grep -E '^(- |### )[0-9]{4}-' "$MEM_DIR/progress.md" 2>/dev/null | tail -n "${1:-8}"; }
 
-# specs/<기능>/ 마다 단계 문서의 상태(> 상태: …)와 작업 진행률 요약
+# 스펙 문서 맨 위 "> 상태: …" 의 첫 단어 (초안, 승인됨)
+doc_status() { sed -n 's/^> 상태: *\([^ ]*\).*/\1/p' "$1" | head -n 1; }
+
+# specs/<기능>/ 마다 단계 문서의 상태와 작업 진행률 요약
 spec_status() {
   local d f line st done total
   for d in "$ROOT"/specs/*/; do
@@ -51,7 +54,7 @@ spec_status() {
     line="- $(basename "$d"):"
     for f in requirements design tasks; do
       [ -f "$d$f.md" ] || continue
-      st="$(sed -n 's/^> 상태: *\([^ ]*\).*/\1/p' "$d$f.md" | head -n 1)"
+      st="$(doc_status "$d$f.md")"
       line="$line $f(${st:-?})"
     done
     if [ -f "${d}tasks.md" ]; then
@@ -60,5 +63,22 @@ spec_status() {
       line="$line · 작업 $done/$total"
     fi
     echo "$line"
+  done
+}
+
+# 승인 전 단계가 남은 스펙(작업 목록까지 승인돼야 구현 가능) — "<기능>: <문서>(<상태>) …" 한 줄씩
+pending_specs() {
+  local d f st out
+  for d in "$ROOT"/specs/*/; do
+    ls "$d"*.md >/dev/null 2>&1 || continue
+    out=""
+    for f in requirements design tasks; do
+      if [ -f "$d$f.md" ]; then
+        st="$(doc_status "$d$f.md")"; [ "$st" = "승인됨" ] || out="$out $f(${st:-상태 없음})"
+      else
+        out="$out $f(없음)"
+      fi
+    done
+    [ -n "$out" ] && echo "$(basename "$d"):$out"
   done
 }

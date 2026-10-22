@@ -1,19 +1,22 @@
 #!/usr/bin/env bash
 # SessionStart 훅 (startup | resume | clear | compact)
-# - 항상: 스펙 워크플로 규칙, (specs/ 가 있으면) 스펙별 단계 상태
+# - specs/ 가 있으면: 진행 중인 스펙 규칙과 스펙별 단계 상태
 # - .claude-memory/ 가 있으면: 세션 메모리 규칙, 인계 노트, (압축 직후라면) 스냅샷, 진행 로그, git 상태
 # 플러그인은 rules 파일을 로드하지 않으므로 규칙도 여기서 출력한다.
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 SPECS="$(spec_status)"
+[ -d "$MEM_DIR" ] || [ -n "$SPECS" ] || exit 0
 HERE="$(dirname "${BASH_SOURCE[0]}")"
 
 SOURCE="$(jget .source)"
 HANDOFF_CHARS="$(cfg handoff_inject_chars 4000)"
 
 {
-  cat "$HERE/../rules/spec-workflow.md"
-  [ -n "$SPECS" ] && { echo; echo "### 진행 중인 스펙 (specs/)"; echo "$SPECS"; }
-  echo
+  if [ -n "$SPECS" ]; then
+    cat "$HERE/../rules/spec-workflow.md"
+    echo "$SPECS"
+    echo
+  fi
   if [ -d "$MEM_DIR" ]; then
     cat "$HERE/../rules/session-memory.md"
     echo

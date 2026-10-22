@@ -37,7 +37,8 @@ When developing locally, use the path to this folder instead of `0ssang/specrail
   → review, then "continue" (or /spec-impl user-login 전부 to run all tasks)
 ```
 
-- You don't have to type the first command: asking for a new feature in plain words ("I want to build a todo app") starts `/spec-requirements`. Small jobs like bug fixes go straight to code, and saying "without a spec" (스펙 없이) skips the workflow.
+- **You choose when to use a spec.** Start with `/spec-requirements`, or ask for it explicitly ("let's do this with a spec", 스펙으로 진행하자). A plain "build me X" goes straight to code, like vibe mode.
+- **Approval gate (enforced by a hook):** while any spec still has an unapproved phase, Claude Code asks for your confirmation before Claude edits files outside `specs/`. Allow it for unrelated fixes; delete the spec folder to abandon a spec. (Edits made through shell commands are not covered.)
 - Every spec document starts with a status line, `> 상태: 초안` (draft). When you approve, Claude changes it to `> 상태: 승인됨 (date)` (approved). A phase skill stops if the previous document is not approved.
 - Editing an approved document resets it to draft, and it needs approval again.
 - If implementation shows the design is wrong, Claude stops and proposes a change to design.md instead of drifting from the spec.
@@ -56,7 +57,7 @@ Session memory is **opt-in per project**: hooks only read and write when the pro
 
 | When | What happens |
 |---|---|
-| Session start · `/clear` · resume · after compaction | Injects spec workflow rules (always), spec status (if `specs/` exists), memory rules, handoff note, recent progress, git summary |
+| Session start · `/clear` · resume · after compaction | Injects spec status and rules (if `specs/` exists), memory rules, handoff note, recent progress, git summary |
 | Before compaction | Snapshots changed files, recent requests, last reply, git status (re-injected after compaction) |
 | Every prompt | Suggests saving when token usage passes the threshold |
 | File edits | Records changed files per session |

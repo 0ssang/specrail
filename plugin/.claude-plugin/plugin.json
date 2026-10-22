@@ -1,6 +1,6 @@
 {
   "name": "specrail",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "AI가 스펙이라는 레일 위에서만 움직이게 하는 스펙 기반 개발(AI-DLC) 워크플로와 세션 메모리",
   "author": {
     "name": "0ssang",
