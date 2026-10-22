@@ -1,90 +1,92 @@
 # specrail
 
-AI가 **스펙이라는 레일 위에서만** 움직이게 하는 Claude Code 플러그인입니다.
+A Claude Code plugin that keeps the AI **on the rails of a spec**.
 
-- **스펙 기반 개발 (AI-DLC)**: 요구사항 → 설계 → 작업 목록 → 구현. 단계마다 사람이 승인해야 다음 단계로 넘어갑니다.
-- **세션 메모리**: `/clear`나 자동 압축 뒤에도 인계 노트, 진행 로그, 스펙 진행 상태를 자동으로 다시 불러옵니다.
+- **Spec-driven development (AI-DLC)**: requirements → design → tasks → implementation. Each phase needs your approval before the next one starts.
+- **Session memory**: after `/clear` or auto-compaction, your handoff note, progress log, and spec status are loaded back in automatically.
 
-필요 도구: `bash`, `jq` (macOS는 기본 포함, 없으면 `brew install jq`)
+> Skill prompts and generated documents are currently written in Korean.
 
-## 설치
+Requires `bash` and `jq` (preinstalled on recent macOS; otherwise `brew install jq`).
 
-Claude Code 안에서:
+## Install
+
+Inside Claude Code:
 
 ```text
 /plugin marketplace add 0ssang/specrail
 /plugin install specrail@specrail
 ```
 
-로컬에서 개발 중이라면 `0ssang/specrail` 대신 이 폴더 경로(예: `/Users/me/Dev/specrail`)를 쓰면 됩니다. 설치 후 Claude Code 세션을 새로 시작하세요.
+When developing locally, use the path to this folder instead of `0ssang/specrail`. Start a new Claude Code session after installing.
 
-## 스펙 워크플로
-
-```text
-/spec-requirements 로그인 기능 만들기   # 1. specs/user-login/requirements.md
-  → 검토하고 "승인"
-/spec-design                            # 2. specs/user-login/design.md
-  → 검토하고 "승인"
-/spec-tasks                             # 3. specs/user-login/tasks.md (체크리스트)
-  → 검토하고 "승인"
-/spec-impl                              # 4. 작업 하나 구현 → 확인 → 체크 → 보고
-  → 검토하고 "계속" (또는 /spec-impl user-login 전부)
-```
-
-- 각 문서 맨 위에 `> 상태: 초안` 줄이 있습니다. 사용자가 승인하면 Claude가 `> 상태: 승인됨 (날짜)`로 바꿉니다. 앞 단계가 승인되지 않으면 다음 단계 스킬은 멈춥니다.
-- 승인된 문서를 나중에 고치면 상태가 `초안`으로 돌아가고 다시 승인받습니다.
-- 구현 중에 설계가 틀렸다는 것을 알게 되면, Claude는 코드를 스펙과 다르게 짜지 않고 멈춰서 design.md 수정을 제안합니다.
-- 스킬 이름이 다른 플러그인과 겹치면 `/specrail:spec-design`처럼 앞에 `specrail:`을 붙입니다.
-
-## 세션 메모리
+## Spec workflow
 
 ```text
-... 작업 ...
-/session-save      # 작업 단위가 끝나면 인계 노트 저장 (처음 실행하면 .claude-memory/ 생성)
-/clear             # 컨텍스트 비우기 → 인계 노트가 자동으로 다시 들어옴
-/session-resume    # 더 자세히 복원하고 싶을 때
+/spec-requirements build a login feature   # 1. specs/user-login/requirements.md
+  → review, then approve
+/spec-design                               # 2. specs/user-login/design.md
+  → review, then approve
+/spec-tasks                                # 3. specs/user-login/tasks.md (checklist)
+  → review, then approve
+/spec-impl                                 # 4. implement one task → verify → check off → report
+  → review, then "continue" (or /spec-impl user-login 전부 to run all tasks)
 ```
 
-세션 메모리는 **프로젝트에 `.claude-memory/` 폴더가 있을 때만** 동작합니다. 처음 `/session-save`를 실행하면 폴더가 생깁니다. 그래서 다른 프로젝트에 파일이 함부로 생기지 않습니다.
+- Every spec document starts with a status line, `> 상태: 초안` (draft). When you approve, Claude changes it to `> 상태: 승인됨 (date)` (approved). A phase skill stops if the previous document is not approved.
+- Editing an approved document resets it to draft, and it needs approval again.
+- If implementation shows the design is wrong, Claude stops and proposes a change to design.md instead of drifting from the spec.
+- If a skill name collides with another plugin, prefix it: `/specrail:spec-design`.
 
-| 시점 | 동작 |
+## Session memory
+
+```text
+... work ...
+/session-save      # save a handoff note when a unit of work is done (creates .claude-memory/ on first run)
+/clear             # clear the context → the handoff note is injected again
+/session-resume    # restore in more detail
+```
+
+Session memory is **opt-in per project**: hooks only read and write when the project has a `.claude-memory/` folder. The first `/session-save` creates it, so no files appear in projects you haven't opted in.
+
+| When | What happens |
 |---|---|
-| 세션 시작 · `/clear` · 재개 · 압축 직후 | 스펙 진행 상태(`specs/`가 있을 때), 메모리 규칙, 인계 노트, 최근 진행 로그, git 요약을 주입 |
-| 압축 직전 | 변경 파일, 최근 요청, 마지막 응답, git 상태를 스냅샷으로 저장 (압축 직후 다시 주입) |
-| 매 프롬프트 | 토큰 사용량이 기준을 넘으면 저장 제안 |
-| 파일 수정 | 세션별 변경 파일 기록 |
-| 세션 종료 | 세션 로그에 한 줄 기록 |
+| Session start · `/clear` · resume · after compaction | Injects spec status (if `specs/` exists), memory rules, handoff note, recent progress, git summary |
+| Before compaction | Snapshots changed files, recent requests, last reply, git status (re-injected after compaction) |
+| Every prompt | Suggests saving when token usage passes the threshold |
+| File edits | Records changed files per session |
+| Session end | Appends one line to the session log |
 
-프로젝트에 생기는 파일:
+Files created in your project:
 
 ```text
-specs/<기능>/          requirements.md, design.md, tasks.md
+specs/<feature>/       requirements.md, design.md, tasks.md
 .claude-memory/
-  handoff.md          인계 노트
-  progress.md         작업 로그
-  decisions.md        결정 기록
-  session-log.md      세션 종료 기록
-  snapshots/          압축 스냅샷 (git 제외)
-  .runtime/           세션별 변경 파일 기록 (git 제외)
-  config.json         설정 (선택)
+  handoff.md           handoff note
+  progress.md          work log
+  decisions.md         decision log
+  session-log.md       session end log
+  snapshots/           compaction snapshots (git-ignored)
+  .runtime/            per-session changed files (git-ignored)
+  config.json          settings (optional)
 ```
 
-### 설정 (`.claude-memory/config.json`, 없으면 기본값)
+### Settings (`.claude-memory/config.json`; defaults apply when absent)
 
-| 키 | 기본값 | 설명 |
+| Key | Default | Description |
 |---|---|---|
-| `context_warn_tokens` | `150000` | 이 값을 넘으면 저장을 제안합니다. 1M 컨텍스트 모델이면 높이세요 |
-| `handoff_inject_chars` | `4000` | 자동으로 넣을 인계 노트 길이(바이트) |
-| `snapshot_keep` | `20` | 보관할 압축 스냅샷 수 |
+| `context_warn_tokens` | `300000` | Suggest saving once context usage passes this many tokens |
+| `handoff_inject_chars` | `4000` | Length of the handoff note injected automatically (bytes) |
+| `snapshot_keep` | `20` | Number of compaction snapshots to keep |
 
-## 구조
+## Layout
 
 ```text
-.claude-plugin/marketplace.json   이 저장소가 마켓플레이스
+.claude-plugin/marketplace.json   this repository is the marketplace
 plugin/
   .claude-plugin/plugin.json
-  hooks/hooks.json                훅 등록
-  hooks/*.sh                      훅 스크립트, 조회 도구 mem.sh
-  rules/session-memory.md         SessionStart 훅이 출력하는 메모리 규칙
-  skills/                         spec-* 4개, session-save, session-resume
+  hooks/hooks.json                hook registration
+  hooks/*.sh                      hook scripts and the mem.sh query tool
+  rules/session-memory.md         memory rules printed by the SessionStart hook
+  skills/                         spec-* (4), session-save, session-resume
 ```

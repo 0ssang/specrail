@@ -3,7 +3,7 @@
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 
 TP="$(jget .transcript_path)"
-LIMIT="$(cfg context_warn_tokens 150000)"
+LIMIT="$(cfg context_warn_tokens 300000)"
 [ -n "$TP" ] && [ -f "$TP" ] || exit 0
 
 USED="$(tail -n 400 "$TP" 2>/dev/null | jq -R -n '
