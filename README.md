@@ -28,16 +28,15 @@ When developing locally, use the path to this folder instead of `0ssang/specrail
 
 ```text
 /spec-requirements build a login feature   # 1. specs/user-login/requirements.md
-  → review, then approve
-/spec-design                               # 2. specs/user-login/design.md
-  → review, then approve
-/spec-tasks                                # 3. specs/user-login/tasks.md (checklist)
-  → review, then approve
-/spec-impl                                 # 4. implement one task → verify → check off → report
-  → review, then "continue" (or /spec-impl user-login 전부 to run all tasks)
+  → review, approve → "Move on to design?" → yes
+                                           # 2. specs/user-login/design.md
+  → review, approve → yes                  # 3. specs/user-login/tasks.md (checklist)
+  → review, approve → yes                  # 4. implement one task → verify → check off → report
+  → review, then "continue" (or ask to run all tasks)
 ```
 
 - **You choose when to use a spec.** Start with `/spec-requirements`, or ask for it explicitly ("let's do this with a spec", 스펙으로 진행하자). A plain "build me X" goes straight to code, like vibe mode.
+- **After that, plain words are enough.** Once a phase is approved, Claude offers the next one and starts it when you agree. `/spec-design`, `/spec-tasks` and `/spec-impl` also work directly, for example to resume later.
 - **Approval gate (enforced by a hook):** while any spec still has an unapproved phase, Claude Code asks for your confirmation before Claude edits files outside `specs/`. Allow it for unrelated fixes; delete the spec folder to abandon a spec. (Edits made through shell commands are not covered.)
 - Every spec document starts with a status line, `> 상태: 초안` (draft). When you approve, Claude changes it to `> 상태: 승인됨 (date)` (approved). A phase skill stops if the previous document is not approved.
 - Editing an approved document resets it to draft, and it needs approval again.

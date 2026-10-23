@@ -1,8 +1,7 @@
 ---
 name: spec-impl
-description: 승인된 작업 목록(specs/<기능>/tasks.md)에서 작업을 하나씩 구현하고, 완료 조건을 확인한 뒤 체크하고 보고한다. 스펙 기반 개발의 4단계. /spec-tasks 승인 후, 또는 구현을 이어갈 때 사용한다.
+description: 승인된 작업 목록(specs/<기능>/tasks.md)에서 작업을 하나씩 구현하고, 완료 조건을 확인한 뒤 체크하고 보고한다. 스펙 기반 개발의 4단계. 작업 목록이 승인된 뒤 사용자가 "다음 단계", "구현 시작해줘", "계속"이라고 하거나 /spec-tasks에서 넘어올 때, 또는 구현을 이어갈 때 사용한다.
 argument-hint: "[기능 이름] [작업 번호 | 전부]"
-allowed-tools: Bash(bash "${CLAUDE_PLUGIN_ROOT}/hooks/mem.sh":*)
 ---
 
 # 4단계: 구현
@@ -10,7 +9,7 @@ allowed-tools: Bash(bash "${CLAUDE_PLUGIN_ROOT}/hooks/mem.sh":*)
 대상: $ARGUMENTS
 
 ## 현재 스펙
-!`bash "${CLAUDE_PLUGIN_ROOT}/hooks/mem.sh" specs`
+`specs/*/` 문서들의 맨 위 상태 줄(`> 상태: …`)과 tasks.md의 체크박스로 각 스펙의 단계를 확인한다.
 
 ## 절차
 1. **대상 고르기** — 인자로 받은 기능을 쓴다. 인자가 없으면 위 목록에서 작업 목록이 승인됐고 남은 작업이 있는 스펙을 고른다. 후보가 여럿이면 묻는다.

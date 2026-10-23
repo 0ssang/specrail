@@ -2,7 +2,6 @@
 name: spec-requirements
 description: 사용자가 스펙(명세) 기반으로 진행하자고 명시적으로 요청할 때 사용한다(예: "스펙으로 진행하자", "명세부터 쓰자", "스펙 만들어줘"). 요구사항 문서(specs/<기능>/requirements.md)를 사용자 스토리와 EARS 인수 조건으로 작성하고 승인을 받는다. 스펙 기반 개발의 1단계. 단순히 "~ 만들어줘"라고만 할 때는 쓰지 않는다.
 argument-hint: "<만들 기능 설명>"
-allowed-tools: Bash(bash "${CLAUDE_PLUGIN_ROOT}/hooks/mem.sh":*)
 ---
 
 # 1단계: 요구사항
@@ -10,7 +9,7 @@ allowed-tools: Bash(bash "${CLAUDE_PLUGIN_ROOT}/hooks/mem.sh":*)
 요청: $ARGUMENTS
 
 ## 현재 스펙
-!`bash "${CLAUDE_PLUGIN_ROOT}/hooks/mem.sh" specs`
+`specs/*/` 문서들의 맨 위 상태 줄(`> 상태: …`)과 tasks.md의 체크박스로 각 스펙의 단계를 확인한다.
 
 ## 템플릿
 ````markdown
@@ -54,7 +53,7 @@ allowed-tools: Bash(bash "${CLAUDE_PLUGIN_ROOT}/hooks/mem.sh":*)
    - 구현 방법(기술, 파일, 라이브러리)은 쓰지 않는다. 설계 단계에서 정한다.
 5. **검토 요청** — 요구사항 목록, 가정, 미해결 질문을 짧게 요약해 보여주고 묻는다: "고칠 부분이 있나요? 괜찮으면 승인해 주세요."
 6. **반복** — 피드백을 반영해 문서를 고치고 다시 검토를 요청한다.
-7. **승인** — 사용자가 승인하면 상태 줄을 `> 상태: 승인됨 (YYYY-MM-DD)`로 바꾸고 다음 단계 `/spec-design <기능>`을 안내한다.
+7. **승인** — 사용자가 승인하면 상태 줄을 `> 상태: 승인됨 (YYYY-MM-DD)`로 바꾼다. 그리고 "설계 단계로 넘어갈까요?"라고 묻는다. 사용자가 진행하자고 하면(승인하면서 이미 진행을 요청했으면 묻지 않고) `spec-design` 스킬을 바로 실행한다. 사용자가 명령을 직접 입력할 필요는 없다.
 
 ## 규칙
 - 사용자가 명시적으로 승인하기 전에는 상태를 `승인됨`으로 바꾸지 않는다.

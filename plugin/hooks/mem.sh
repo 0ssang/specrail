@@ -2,7 +2,6 @@
 # 스킬(/session-save, /session-resume)이 호출하는 조회 도구. 표준입력을 읽지 않는다.
 #   mem.sh changes   — 가장 최근 세션의 변경 파일
 #   mem.sh overview  — 인계 노트·스냅샷·로그·git 요약
-#   mem.sh specs     — specs/<기능>/ 별 단계 상태
 KIT_NO_STDIN=1
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 
@@ -30,7 +29,6 @@ overview() {
 
 case "${1:-overview}" in
   changes) changes;;
-  specs) S="$(spec_status)"; echo "${S:-(아직 스펙 없음)}";;
   *) overview;;
 esac
 exit 0

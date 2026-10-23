@@ -1,8 +1,7 @@
 ---
 name: spec-design
-description: 승인된 요구사항을 바탕으로 코드베이스를 조사해 설계 문서(specs/<기능>/design.md)를 쓰고 사용자 승인을 받는다. 스펙 기반 개발의 2단계. /spec-requirements 승인 후 사용한다.
+description: 승인된 요구사항을 바탕으로 코드베이스를 조사해 설계 문서(specs/<기능>/design.md)를 쓰고 사용자 승인을 받는다. 스펙 기반 개발의 2단계. 요구사항이 승인된 뒤 사용자가 "다음 단계", "설계 진행해줘"라고 하거나 /spec-requirements에서 넘어올 때 사용한다.
 argument-hint: "[기능 이름]"
-allowed-tools: Bash(bash "${CLAUDE_PLUGIN_ROOT}/hooks/mem.sh":*)
 ---
 
 # 2단계: 설계
@@ -10,7 +9,7 @@ allowed-tools: Bash(bash "${CLAUDE_PLUGIN_ROOT}/hooks/mem.sh":*)
 대상: $ARGUMENTS
 
 ## 현재 스펙
-!`bash "${CLAUDE_PLUGIN_ROOT}/hooks/mem.sh" specs`
+`specs/*/` 문서들의 맨 위 상태 줄(`> 상태: …`)과 tasks.md의 체크박스로 각 스펙의 단계를 확인한다.
 
 ## 템플릿
 ````markdown
@@ -62,7 +61,7 @@ allowed-tools: Bash(bash "${CLAUDE_PLUGIN_ROOT}/hooks/mem.sh":*)
    - 해당 없는 섹션은 지우지 말고 "해당 없음"이라고 쓴다.
 5. **검토 요청** — 핵심 설계 결정과 대안, 바뀌는 파일 목록을 짧게 요약하고 묻는다: "고칠 부분이 있나요? 괜찮으면 승인해 주세요."
 6. **반복** — 피드백을 반영해 고친다. 요구사항 자체가 바뀌어야 하면 requirements.md를 고치고 그 문서도 다시 승인받는다.
-7. **승인** — 사용자가 승인하면 상태 줄을 `> 상태: 승인됨 (YYYY-MM-DD)`로 바꾼다. `.claude-memory/`가 있으면 주요 설계 결정을 `decisions.md`에 기록한다. 다음 단계 `/spec-tasks <기능>`을 안내한다.
+7. **승인** — 사용자가 승인하면 상태 줄을 `> 상태: 승인됨 (YYYY-MM-DD)`로 바꾼다. `.claude-memory/`가 있으면 주요 설계 결정을 `decisions.md`에 기록한다. 그리고 "작업 목록 단계로 넘어갈까요?"라고 묻는다. 사용자가 진행하자고 하면(승인하면서 이미 진행을 요청했으면 묻지 않고) `spec-tasks` 스킬을 바로 실행한다. 사용자가 명령을 직접 입력할 필요는 없다.
 
 ## 규칙
 - 사용자가 명시적으로 승인하기 전에는 상태를 `승인됨`으로 바꾸지 않는다.
