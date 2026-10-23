@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.png" alt="specrail logo" width="640">
+  <img src="assets/specrail_logo.png" alt="specrail logo" width="640">
 </p>
 
 # specrail
