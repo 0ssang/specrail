@@ -7,7 +7,7 @@
 A Claude Code plugin that keeps the AI **on the rails of a spec**.
 
 - **Spec-driven development (AI-DLC)**: requirements → design → tasks → implementation. Each phase needs your approval before the next one starts.
-- **Session memory**: after `/clear` or auto-compaction, your handoff note, progress log, and spec status are loaded back in automatically.
+- **Session memory (optional)**: after `/clear` or auto-compaction, your handoff note and progress log are loaded back in automatically.
 
 > Skill prompts and generated documents are currently written in Korean.
 
@@ -43,7 +43,15 @@ When developing locally, use the path to this folder instead of `0ssang/specrail
 - If implementation shows the design is wrong, Claude stops and proposes a change to design.md instead of drifting from the spec.
 - If a skill name collides with another plugin, prefix it: `/specrail:spec-design`.
 
-## Session memory
+## Session memory (optional)
+
+For spec work you usually don't need it: the spec documents already record what to build (requirements.md), how and why (design.md), and how far you are (tasks.md checkboxes and approval status), and a new session is told the spec status automatically.
+
+Session memory covers what the specs don't:
+
+- **A task interrupted midway**: a checkbox is only done or not done; it doesn't hold "two tests failing, probably because of X".
+- **Work outside a spec**: quick fixes and vibe-mode work leave no spec documents.
+- **Long sessions**: before auto-compaction, a snapshot of recent requests and changed files is saved and loaded back in afterwards.
 
 ```text
 ... work ...
